@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DDoSCVE Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js"
+        defer>
+    </script>
+
+    <script src="app.js" defer></script>
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- =====================================================
+         TOP BAR
+         ===================================================== -->
+    <header class="topbar">
+
+        <div class="brand">
+            <div class="brand-mark">&gt;</div>
+
+            <div class="brand-text">
+                <h1>DDoSCVE</h1>
+                <span>Protocol-aware DoS/DDoS CVE Dashboard</span>
+                <span>10,000-CVE random sample · Not full-corpus totals</span>
+            </div>
+        </div>
+
+        <div class="dataset-status">
+            <span id="dataset-status-text">Loading dataset...</span>
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN DASHBOARD
+         ===================================================== -->
+    <main class="dashboard">
+
+        <!-- =================================================
+             SEARCH + FILTER TOOLBAR
+             ================================================= -->
+        <section class="toolbar panel">
+
+            <div class="search-group">
+                <label for="search-input">Search</label>
+
+                <input
+                    id="search-input"
+                    type="search"
+                    placeholder="Search CVE ID, vendor, product..."
+                    autocomplete="off">
+            </div>
+
+
+            <div class="filter-group">
+
+                <label for="relevance-filter">Relevance</label>
+                <select id="relevance-filter">
+                    <option value="relevant" selected>Relevant</option>
+                    <option value="relevant_without_simple_crash">Relevant W/O simple crash</option>
+                    <option value="all">All</option>
+                    <option value="not relevant">Not relevant</option>
+                    <option value="unclear">Unclear</option>
+                </select>
+
+
+                <label for="year-filter">Year</label>
+                <select id="year-filter">
+                    <option value="all">All years</option>
+                </select>
+
+
+                <label for="protocol-filter">Protocol</label>
+                <select id="protocol-filter">
+                    <option value="all">All protocols</option>
+                </select>
+
+
+                <label for="cwe-filter">CWE</label>
+                <select id="cwe-filter">
+                    <option value="all">All CWEs</option>
+                </select>
+
+
+                <label for="mechanism-filter">Mechanism</label>
+                <select id="mechanism-filter">
+                    <option value="all">All mechanisms</option>
+                </select>
+
+
+                <label for="kev-filter">KEV</label>
+                <select id="kev-filter">
+                    <option value="all">Any</option>
+                    <option value="true">KEV only</option>
+                    <option value="false">Non-KEV</option>
+                </select>
+
+            </div>
+
+
+            <div class="range-filter-group">
+
+                <div class="range-filter">
+                    <label for="cvss-min">
+                        Minimum CVSS
+                    </label>
+
+                    <input
+                        id="cvss-min"
+                        type="number"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        placeholder="0">
+                </div>
+
+
+                <div class="range-filter">
+                    <label for="confidence-min">
+                        Minimum confidence
+                    </label>
+
+                    <input
+                        id="confidence-min"
+                        type="number"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        placeholder="0">
+                </div>
+
+            </div>
+
+
+            <button id="reset-filters" type="button">
+                Reset filters
+            </button>
+
+        </section>
+
+
+        <!-- =================================================
+             SUMMARY CARDS
+             ================================================= -->
+        <section class="summary-grid">
+
+            <article class="summary-card panel">
+                <span class="summary-label">
+                    Analyzed CVEs
+                </span>
+
+                <strong
+                    id="summary-total"
+                    class="summary-value">
+                    -
+                </strong>
+            </article>
+
+
+            <article class="summary-card panel">
+                <span class="summary-label">
+                    Relevant
+                </span>
+
+                <strong
+                    id="summary-relevant"
+                    class="summary-value">
+                    -
+                </strong>
+            </article>
+
+
+            <article class="summary-card panel">
+                <span class="summary-label">
+                    Protocol Context
+                </span>
+
+                <strong
+                    id="summary-protocol"
+                    class="summary-value">
+                    -
+                </strong>
+            </article>
+
+
+            <article class="summary-card panel">
+                <span class="summary-label">
+                    KEV
+                </span>
+
+                <strong
+                    id="summary-kev"
+                    class="summary-value">
+                    -
+                </strong>
+            </article>
+
+        </section>
+
+
+        <!-- =================================================
+             ANALYTICS
+             ================================================= -->
+        <section class="analytics-grid">
+
+            <article class="chart-panel panel timeline-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h2>CVEs Over Time</h2>
+                        <span>Filtered DoS/DDoS CVE distribution by year</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="timeline-chart"></canvas>
+                </div>
+
+            </article>
+
+
+            <article class="chart-panel panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h2>Attack Mechanisms</h2>
+                        <span>Distribution of DLV mechanism labels</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="mechanism-chart"></canvas>
+                </div>
+
+            </article>
+
+
+            <article class="chart-panel panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h2>Protocols</h2>
+                        <span>ProtoCVE protocol context</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="protocol-chart"></canvas>
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- =================================================
+             STAGE 12.1: TREND ANALYTICS
+             ================================================= -->
+        <section class="trend-analytics">
+
+            <div class="trend-section-header">
+                <div>
+                    <h2>Trend Analytics</h2>
+                    <span>Yearly DoS/DDoS trends across DLV and enrichment dimensions</span>
+                </div>
+            </div>
+
+
+            <div class="trend-grid">
+
+                <article class="chart-panel panel trend-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h2>Mechanism by Year</h2>
+                            <span>Relevant CVEs grouped by DLV attack mechanism</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container trend-chart-container">
+                        <canvas id="mechanism-trend-chart"></canvas>
+                    </div>
+
+                </article>
+
+
+                <article class="chart-panel panel trend-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h2>CWE by Year</h2>
+                            <span>Top 6 CWE categories across relevant CVEs, with remaining labels grouped as Other</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container trend-chart-container">
+                        <canvas id="cwe-trend-chart"></canvas>
+                    </div>
+
+                    <p class="trend-note">
+                        Counts represent CWE occurrences across CVEs. A CVE with multiple CWEs contributes once to each distinct CWE.
+                    </p>
+
+                </article>
+
+
+                <article class="chart-panel panel trend-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h2>Protocol by Year</h2>
+                            <span>Top 6 ProtoCVE protocol categories across relevant CVEs, with remaining labels grouped as Other</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container trend-chart-container">
+                        <canvas id="protocol-trend-chart"></canvas>
+                    </div>
+
+                    <p class="trend-note">
+                        Counts represent protocol occurrences across CVEs. A CVE with multiple protocols contributes once to each distinct protocol.
+                    </p>
+
+                </article>
+
+            <article class="chart-panel panel trend-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h2>Simple Crash vs Other Relevant DoS/DDoS</h2>
+                            <span>Relevant CVEs grouped by the simple-crash deprioritization flag</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container trend-chart-container">
+                        <canvas id="simple-crash-trend-chart"></canvas>
+                    </div>
+
+                    <p class="trend-note">
+                        Simple crashes are retained in the dataset but separated from other relevant DoS/DDoS cases to reflect the project scope.
+                    </p>
+
+                </article>
+
+
+                            </div>
+
+            <p class="trend-note">* 2026 is a partial year.</p>
+
+        </section>
+
+
+        <!-- =================================================
+             CVE RECORDS
+             ================================================= -->
+        <section class="records-panel panel">
+
+            <div class="panel-header records-header">
+
+                <div>
+                    <h2>CVE Records</h2>
+
+                    <span id="records-count">
+                        Showing 0 records
+                    </span>
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table id="cve-table">
+
+                    <thead>
+                    <tr>
+                        <th>CVE</th>
+                        <th>Year</th>
+                        <th>CVSS</th>
+                        <th>CWE</th>
+                        <th>Protocol</th>
+                        <th>Relevance</th>
+                        <th>Mechanism</th>
+                        <th>Confidence</th>
+                        <th>KEV</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="cve-table-body">
+
+                    <!-- Populated by app.js -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     CVE DETAILS DIALOG
+     ========================================================= -->
+<dialog id="cve-details-dialog">
+
+    <div class="details-dialog-content">
+
+        <header class="details-header">
+
+            <div>
+                <h2 id="details-cve-id">
+                    CVE
+                </h2>
+
+                <span id="details-summary">
+                </span>
+            </div>
+
+            <button
+                id="details-close"
+                type="button"
+                aria-label="Close CVE details">
+                ×
+            </button>
+
+        </header>
+
+
+        <!-- Metadata -->
+        <section class="details-section">
+
+            <h3>Metadata</h3>
+
+            <div id="details-metadata">
+            </div>
+
+        </section>
+
+
+        <!-- Protocol Context -->
+        <section class="details-section">
+
+            <h3>Protocol Context</h3>
+
+            <div id="details-protocol">
+            </div>
+
+        </section>
+
+
+        <!-- DLV -->
+        <section class="details-section">
+
+            <h3>DDoS Label Vector</h3>
+
+            <div id="details-dlv">
+            </div>
+
+        </section>
+
+
+        <!-- References -->
+        <section class="details-section">
+
+            <h3>References</h3>
+
+            <div id="details-references">
+            </div>
+
+        </section>
+
+    </div>
+
+</dialog>
+
+</body>
+</html>

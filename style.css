@@ -1,0 +1,832 @@
+/* =========================================================
+   DDoSCVE Dashboard
+   XSOAR-inspired dark security-operations theme
+   ========================================================= */
+
+
+/* =========================================================
+   THEME
+   ========================================================= */
+
+:root {
+    --bg-main: #111315;
+    --bg-topbar: #151719;
+
+    --bg-panel: #181a1d;
+    --bg-panel-hover: #1d2024;
+    --bg-input: #141618;
+    --bg-table-header: #1b1e21;
+
+    --border: #30343a;
+    --border-soft: #25292e;
+
+    --text-main: #e7e9ec;
+    --text-secondary: #b3b8bf;
+    --text-muted: #7f8790;
+
+    --accent: #00d7c3;
+    --accent-blue: #00a8e8;
+    --accent-pink: #e52b85;
+
+    --success: #20c76f;
+    --warning: #f4a340;
+    --danger: #ef3f55;
+
+    --radius: 3px;
+
+    --topbar-height: 66px;
+}
+
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--bg-main);
+}
+
+body {
+    margin: 0;
+    min-width: 1100px;
+
+    background: var(--bg-main);
+    color: var(--text-main);
+
+    font-family:
+        Inter,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size: 13px;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   APPLICATION SHELL
+   ========================================================= */
+
+.app-shell {
+    min-height: 100vh;
+    background: var(--bg-main);
+}
+
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+.topbar {
+    height: var(--topbar-height);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 22px;
+
+    background: var(--bg-topbar);
+    border-bottom: 1px solid var(--border);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-mark {
+    color: var(--accent);
+
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-text h1 {
+    margin: 0;
+
+    color: var(--text-main);
+
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.brand-text span {
+    margin-top: 2px;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
+.dataset-status {
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   MAIN DASHBOARD
+   ========================================================= */
+
+.dashboard {
+    padding: 18px 20px 28px;
+}
+
+
+/* =========================================================
+   GENERIC PANEL
+   ========================================================= */
+
+.panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+
+/* =========================================================
+   FILTER TOOLBAR
+   ========================================================= */
+
+.toolbar {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    padding: 13px 15px;
+    margin-bottom: 14px;
+}
+
+.search-group,
+.range-filter,
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.search-group {
+    flex: 1 1 280px;
+}
+
+.search-group label,
+.filter-group label,
+.range-filter label {
+    color: var(--text-muted);
+
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.search-group input {
+    flex: 1;
+    min-width: 230px;
+}
+
+.filter-group {
+    flex-wrap: wrap;
+}
+
+.range-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.range-filter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+
+/* =========================================================
+   FORM CONTROLS
+   ========================================================= */
+
+input,
+select {
+    height: 30px;
+
+    padding: 0 9px;
+
+    color: var(--text-main);
+
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease;
+}
+
+input::placeholder {
+    color: #656c74;
+}
+
+input:hover,
+select:hover {
+    border-color: #454b53;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--accent-blue);
+}
+
+select {
+    padding-right: 28px;
+}
+
+#cvss-min {
+    width: 85px;
+}
+
+#confidence-min {
+    width: 100px;
+}
+
+#reset-filters {
+    height: 30px;
+
+    padding: 0 14px;
+
+    color: var(--text-secondary);
+
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+}
+
+#reset-filters:hover {
+    color: var(--text-main);
+    border-color: var(--accent);
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+   ========================================================= */
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+.summary-card {
+    min-height: 84px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 14px 16px;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-card::before {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 3px;
+
+    background: var(--accent);
+}
+
+.summary-label {
+    color: var(--text-muted);
+
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.55px;
+}
+
+.summary-value {
+    margin-top: 5px;
+
+    color: var(--text-main);
+
+    font-size: 27px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+
+/* =========================================================
+   ANALYTICS
+   ========================================================= */
+
+.analytics-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.6fr)
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+.chart-panel {
+    min-width: 0;
+    min-height: 290px;
+
+    padding: 0;
+}
+
+.panel-header {
+    min-height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 10px 13px;
+
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.panel-header h2 {
+    margin: 0;
+
+    color: var(--text-main);
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.panel-header span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+.chart-container {
+    position: relative;
+
+    height: 235px;
+
+    padding: 10px 12px 12px;
+}
+
+
+/* =========================================================
+   STAGE 12.1: TREND ANALYTICS
+   ========================================================= */
+
+.trend-analytics {
+    margin-bottom: 14px;
+}
+
+.trend-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    padding: 2px 2px 9px;
+}
+
+.trend-section-header h2 {
+    margin: 0;
+
+    color: var(--text-main);
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.trend-section-header span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+.trend-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+}
+
+.trend-panel {
+    min-height: 365px;
+    overflow: hidden;
+}
+
+.trend-chart-container {
+    height: 300px;
+    padding: 12px 14px 8px;
+}
+
+.trend-note {
+    margin: 0;
+    padding: 9px 13px 11px;
+
+    color: var(--text-muted);
+
+    border-top: 1px solid var(--border-soft);
+
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   CVE RECORD TABLE
+   ========================================================= */
+
+.records-panel {
+    overflow: hidden;
+}
+
+.records-header {
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#cve-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 11px;
+}
+
+#cve-table th,
+#cve-table td {
+    height: 37px;
+
+    padding: 7px 11px;
+
+    text-align: left;
+    white-space: nowrap;
+
+    border-right: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+}
+
+#cve-table th:last-child,
+#cve-table td:last-child {
+    border-right: none;
+}
+
+#cve-table th {
+    color: #aeb5bc;
+
+    background: var(--bg-table-header);
+
+    font-size: 9px;
+    font-weight: 500;
+
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+#cve-table tbody tr {
+    background: var(--bg-panel);
+
+    transition: background 0.12s ease;
+}
+
+#cve-table tbody tr:hover {
+    background: var(--bg-panel-hover);
+}
+
+#cve-table tbody tr {
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   TABLE VALUES / BADGES
+   ========================================================= */
+
+.cve-link {
+    color: var(--accent-blue);
+    font-weight: 500;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 20px;
+
+    padding: 2px 7px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    color: var(--text-secondary);
+    background: #151719;
+
+    font-size: 10px;
+}
+
+.badge-relevant {
+    color: var(--success);
+    border-color: rgba(32, 199, 111, 0.35);
+}
+
+.badge-not-relevant {
+    color: var(--text-muted);
+}
+
+.badge-unclear {
+    color: var(--warning);
+    border-color: rgba(244, 163, 64, 0.35);
+}
+
+.badge-kev {
+    color: var(--danger);
+    border-color: rgba(239, 63, 85, 0.4);
+}
+
+.badge-protocol {
+    color: var(--accent-blue);
+    border-color: rgba(0, 168, 232, 0.35);
+}
+
+.badge-mechanism {
+    color: var(--accent);
+    border-color: rgba(0, 215, 195, 0.3);
+}
+
+
+/* =========================================================
+   CVE DETAILS DIALOG
+   ========================================================= */
+
+#cve-details-dialog {
+    width: min(900px, 90vw);
+    max-height: 88vh;
+
+    padding: 0;
+
+    color: var(--text-main);
+
+    background: var(--bg-panel);
+
+    border: 1px solid #3b4149;
+    border-radius: 4px;
+
+    box-shadow:
+        0 18px 60px rgba(0, 0, 0, 0.65);
+
+    overflow: hidden;
+}
+
+#cve-details-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.72);
+}
+
+.details-dialog-content {
+    max-height: 88vh;
+
+    overflow-y: auto;
+}
+
+.details-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 64px;
+
+    padding: 12px 16px;
+
+    background: #151719;
+    border-bottom: 1px solid var(--border);
+}
+
+.details-header h2 {
+    margin: 0;
+
+    color: var(--accent-blue);
+
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.details-header span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+}
+
+#details-close {
+    width: 30px;
+    height: 30px;
+
+    padding: 0;
+
+    color: var(--text-muted);
+
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 2px;
+
+    font-size: 22px;
+    line-height: 1;
+}
+
+#details-close:hover {
+    color: var(--text-main);
+    border-color: var(--border);
+}
+
+.details-section {
+    padding: 16px;
+
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.details-section:last-child {
+    border-bottom: none;
+}
+
+.details-section h3 {
+    margin: 0 0 12px;
+
+    color: var(--accent);
+
+    font-size: 11px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+
+/* =========================================================
+   DETAIL FIELD HELPERS
+   ========================================================= */
+
+.details-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(120px, 170px)
+        minmax(0, 1fr);
+
+    gap: 8px 15px;
+}
+
+.detail-label {
+    color: var(--text-muted);
+}
+
+.detail-value {
+    color: var(--text-main);
+    word-break: break-word;
+}
+
+.detail-value a {
+    color: var(--accent-blue);
+    text-decoration: none;
+}
+
+.detail-value a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   EMPTY / ERROR STATES
+   ========================================================= */
+
+.empty-state {
+    padding: 32px;
+
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.error-state {
+    padding: 14px;
+
+    color: var(--danger);
+
+    border: 1px solid rgba(239, 63, 85, 0.35);
+    background: rgba(239, 63, 85, 0.06);
+}
+
+
+/* =========================================================
+   SCROLLBARS
+   ========================================================= */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #42474e #151719;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #151719;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #42474e;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555c65;
+}
+
+
+/* =========================================================
+   RESPONSIVE BEHAVIOR
+   ========================================================= */
+
+@media (max-width: 1400px) {
+
+    .analytics-grid {
+        grid-template-columns:
+            minmax(0, 1.5fr)
+            minmax(0, 1fr);
+    }
+
+    .analytics-grid .chart-panel:last-child {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 1150px) {
+
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-grid .chart-panel:last-child {
+        grid-column: auto;
+    }
+}
